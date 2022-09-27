@@ -28,10 +28,8 @@ function App() {
   // Spotify Auth ==================================================== //
 
   // Get spotify keys from .env
-  // require('dotenv').config();
-
   const spotify_client_id = process.env.REACT_APP_SPOTIFYCLIENTID
-  // Spotify auth stuff
+  // Spotify auth
   const redirect_uri = 'http://localhost:3000';
   const auth_endpoint = 'https://accounts.spotify.com/authorize';
   const response_type = 'token';
