@@ -1,0 +1,185 @@
+// Fonts
+@font-face {
+    font-family: 'SF Pro Display Light';
+    src: url('./Fonts/SF-Pro-Display-Light.otf');
+}
+@font-face {
+    font-family: 'SF Pro Display Medium';
+    src: url('./Fonts/SF-Pro-Display-Medium.otf');
+}
+@font-face {
+    font-family: 'SF Pro Display Heavy';
+    src: url('./Fonts/SF-Pro-Display-Heavy.otf');
+}
+
+$font-1: "Menlo";
+
+// Colors
+$color-1: #111;
+$color-2: #395B64;
+$color-3: #A5C9CA;
+$color-4: #E7F6F2;
+$color-5: #222;
+
+// Screen dimensions
+$small: 375px;
+$medium: 800px;
+$large: 1200px;
+
+// * {
+//     border:1px solid red;
+// }
+
+.width-100 {
+    width:100%
+}
+
+.text-center {
+    text-align: center;
+}
+
+.padding {
+    padding: 1em;
+}
+
+.centered {
+    display:block;
+    margin:auto;
+    align-items: center;
+    text-align:center;
+}
+
+// Layout
+
+.flex-row {
+    display:flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.flex-row-centered {
+    justify-content: center;
+}
+
+.flex-center-align {
+    margin:auto;
+}
+
+.indent {
+    margin-left:1em;
+}
+
+// Spacers
+.spacer {
+    width:1em;
+}
+
+.spacer-fill {
+    flex-grow:1;
+}
+
+// Dark Mode
+#light {
+    background-color: $color-3;
+
+    .spotify-login-container {
+        border: 1px solid $color-2;
+    }
+}
+
+#dark {
+    background-color: $color-1;
+
+    h1 {
+        color:$color-3;
+    }
+
+    h2, h3, h4, h5, h6 {
+        color:$color-3;
+    }
+
+    p {
+        color:lightgray;
+        text-align: center; 
+    }
+
+    .dark-mode-switch{
+        color:gray;
+    }
+}
+
+
+// Components
+.app {
+    width: 100vw;
+    height: 100vh;
+}
+
+.site-title {
+    font-family:"SF Pro Display Light";
+}
+
+.spotify-login-container {
+    width: fit-content;
+    border: 1px solid rgba($color-3, 0.5);
+    border-radius: 10px;
+    padding:1em
+}
+
+.title-text {
+    text-align: center;
+    font-family: 'SF Pro Display Heavy', light;
+}
+
+.subtitle-text {
+    text-align: center;
+    font-family: 'SF Pro Display Light', light;
+}
+
+#search-parameters-container {
+    justify-content: center;
+}
+
+.spotify-login-container{
+    padding:.75em;
+    max-width:50vw;
+}
+
+.text-white {
+    color: whitesmoke;
+}
+
+.inputs {
+    max-width:500px
+}
+
+#max-query-input {
+    // max-width:100px;
+    // width:max-content;
+}
+
+.big-button {
+    width:15em;
+}
+
+#create-playlist-button {
+    margin-left: 1em;
+}
+
+.tracklist {
+    max-width: 600px;
+    display:block;
+    margin:auto;
+    .tracklist-item {
+        // display:block;
+        // margin:auto;
+        // max-width:600px;
+        background-color: $color-5;
+        color:$color-3;
+        border: 0.01em solid gray;
+    }
+}
+
+
+

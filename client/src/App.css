@@ -1,0 +1,145 @@
+@font-face {
+  font-family: "SF Pro Display Light";
+  src: url("./Fonts/SF-Pro-Display-Light.otf");
+}
+@font-face {
+  font-family: "SF Pro Display Medium";
+  src: url("./Fonts/SF-Pro-Display-Medium.otf");
+}
+@font-face {
+  font-family: "SF Pro Display Heavy";
+  src: url("./Fonts/SF-Pro-Display-Heavy.otf");
+}
+.width-100 {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.padding {
+  padding: 1em;
+}
+
+.centered {
+  display: block;
+  margin: auto;
+  align-items: center;
+  text-align: center;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.flex-row-centered {
+  justify-content: center;
+}
+
+.flex-center-align {
+  margin: auto;
+}
+
+.indent {
+  margin-left: 1em;
+}
+
+.spacer {
+  width: 1em;
+}
+
+.spacer-fill {
+  flex-grow: 1;
+}
+
+#light {
+  background-color: #A5C9CA;
+}
+#light .spotify-login-container {
+  border: 1px solid #395B64;
+}
+
+#dark {
+  background-color: #111;
+}
+#dark h1 {
+  color: #A5C9CA;
+}
+#dark h2, #dark h3, #dark h4, #dark h5, #dark h6 {
+  color: #A5C9CA;
+}
+#dark p {
+  color: lightgray;
+  text-align: center;
+}
+#dark .dark-mode-switch {
+  color: gray;
+}
+
+.app {
+  width: 100vw;
+  height: 100vh;
+}
+
+.site-title {
+  font-family: "SF Pro Display Light";
+}
+
+.spotify-login-container {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  border: 1px solid rgba(165, 201, 202, 0.5);
+  border-radius: 10px;
+  padding: 1em;
+}
+
+.title-text {
+  text-align: center;
+  font-family: "SF Pro Display Heavy", light;
+}
+
+.subtitle-text {
+  text-align: center;
+  font-family: "SF Pro Display Light", light;
+}
+
+#search-parameters-container {
+  justify-content: center;
+}
+
+.spotify-login-container {
+  padding: 0.75em;
+  max-width: 50vw;
+}
+
+.text-white {
+  color: whitesmoke;
+}
+
+.inputs {
+  max-width: 500px;
+}
+
+.big-button {
+  width: 15em;
+}
+
+#create-playlist-button {
+  margin-left: 1em;
+}
+
+.tracklist {
+  max-width: 600px;
+  display: block;
+  margin: auto;
+}
+.tracklist .tracklist-item {
+  background-color: #222;
+  color: #A5C9CA;
+  border: 0.01em solid gray;
+}/*# sourceMappingURL=App.css.map */
