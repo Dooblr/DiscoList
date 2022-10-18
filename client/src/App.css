@@ -79,10 +79,12 @@
 #dark .dark-mode-switch {
   color: gray;
 }
+#dark .form-label {
+  color: #A5C9CA;
+}
 
 .app {
-  width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .site-title {
@@ -90,9 +92,6 @@
 }
 
 .spotify-login-container {
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
   border: 1px solid rgba(165, 201, 202, 0.5);
   border-radius: 10px;
   padding: 1em;
@@ -125,8 +124,8 @@
   max-width: 500px;
 }
 
-.big-button {
-  width: 15em;
+#logged-in-text {
+  margin: auto;
 }
 
 #create-playlist-button {

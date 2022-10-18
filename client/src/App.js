@@ -4,19 +4,33 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import axios from 'axios'
 
+// Theme context for dark mode
 export const ThemeContext = createContext(null)
 
 function App() {
 
-  // Express server address
-  const hosturl = "http://localhost:5000"
-  
+  let devState = "dev" // "prod/dev"
+  let hosturl = ""
+  let spotify_redirect_uri = ""
+
+  if (devState === "prod") {
+    // Express server address
+    hosturl = "http://54.176.233.72:8888"
+    spotify_redirect_uri = 'http://54.176.233.72:8888/';
+  } else if (devState === "dev") {
+    // Express server address 
+    hosturl = "http://localhost:5000"
+    spotify_redirect_uri = 'http://localhost:3000';
+  }
+
   // State ============================================================ //
 
   // UI State
   const [labelSearchInput, setLabelSearchInput] = useState('');
   const [queryMax, setQueryMax] = useState(20);
   const [isLoading, setIsLoading] = useState(false);
+  const [spotifyIsCreating, setSpotifyIsCreating] = useState(false)
+  const [spotifyMessage, setSpotifyMessage] = useState('')
   const [theme, setTheme] = useState("dark");
 
   // Auth State
@@ -30,9 +44,9 @@ function App() {
   // Get spotify keys from .env
   const spotify_client_id = process.env.REACT_APP_SPOTIFYCLIENTID
   // Spotify auth
-  const redirect_uri = 'http://localhost:3000';
-  const auth_endpoint = 'https://accounts.spotify.com/authorize';
-  const response_type = 'token';
+  
+  const spotify_auth_endpoint = 'https://accounts.spotify.com/authorize';
+  const spotify_response_type = 'token';
 
   // UI Handlers ====================================================== //
 
@@ -64,14 +78,16 @@ function App() {
 
   async function createPlaylistHandler(){
     
+    setSpotifyIsCreating(true)
+
     // Get user ID
     const userID = await getUserID()
 
     // Create an empty playlist
     const createPlaylistResponse = await axios.post(`https://api.spotify.com/v1/users/${userID}/playlists`,
       {
-        "name": "My new playlist",
-        "description": "my new playlist",
+        "name": `${labelSearchInput}`,
+        "description": `Discolist made this playlist based on ${labelSearchInput}`,
         "public": false
       }, 
       {
@@ -86,9 +102,10 @@ function App() {
 
     // Get a list of spotify URI's from the tracklist state
     const spotifyURIs = await getSpotifyURIs(tracklist)
-    // console.log(playlistID)
     
-    addSpotifyTracksToPlaylist(playlistID, spotifyURIs)
+    await addSpotifyTracksToPlaylist(playlistID, spotifyURIs)
+
+    setSpotifyIsCreating(false)
   }
 
   // takes a Spotify playlist ID and an array of spotify URIs -> adds them to a spotify playlist
@@ -102,6 +119,8 @@ function App() {
         "Authorization": "Bearer " + spotifyToken
       }
     })
+    console.log(addTracksResponse)
+    setSpotifyMessage(addTracksResponse)
   }
 
   // Gets user ID for creating an empty playlist
@@ -148,9 +167,10 @@ function App() {
 
   // Clear spotify token from window. TODO: Log out from spotify as well?
   function logout() {
-    getSpotifyTokenFromWindow("")
+    getSpotifyTokenFromWindow()
     window.localStorage.removeItem("token")
     alert('You have been logged out of Spotify')
+    window.location.reload()
   }
 
   // Toggle HTML dark/light theme ID
@@ -173,11 +193,11 @@ function App() {
     setSpotifyToken(token)
   }
 
-  // ComponentDidMount Sets spotify token from window
+  // "ComponentDidMount" - sets spotify token from window on initial render
   useEffect(() => {
     getSpotifyTokenFromWindow()
   }, [])
-
+  
   // JSX ================================================= //
 
   return (
@@ -185,9 +205,7 @@ function App() {
     // ThemeContext bridges React's theme state to HTML's ID which is then read by CSS
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       <div className="app padding" id={theme}>
-
         <div className="flex-row">
-
           <div>
             <h1 className="site-title">DiscoList</h1>
             
@@ -203,28 +221,39 @@ function App() {
             />
           </div>
 
-          {/* Spotify Login status and logout button */}
+          {/* Spotify login status + logout button */}
           {spotifyToken && 
-            <div className="text-center spotify-login-container">
-                <div className="centered flex-row">
-                  <h6>Logged into Spotify 👌</h6>
-                  <div className="spacer"/>
-                  <Button variant="danger" size="sm" onClick={logout} className="spotify-logout-button">Logout</Button>
-                </div>
+            <div className="text-center spotify-login-container flex-row">
+                <h6 id="logged-in-text">Logged into Spotify 👌</h6>
+                <div className="spacer"/>
+                <Button variant="danger" size="sm" onClick={logout} className="spotify-logout-button">Logout</Button>
             </div>
           }
         </div>
-
           
         <br/>
 
-        <h3 className="title-text">Type in a Record Label. </h3>
-        <h5 className="subtitle-text">We'll turn it into a playlist. </h5>
+        {/* Heading */}
+        <h3 className="title-text">Type in a Record Label.</h3>
+        <h5 className="subtitle-text">We'll turn it into a playlist.</h5>
 
         <br/>
 
+        {/* Spotify login button */}
+        {!spotifyToken && 
+          <div className="text-center">
+              <h4>To begin, click to log into your Spotify account:</h4>
+              <br/>
+              <Button variant="success" 
+                size="lg"
+                href={`${spotify_auth_endpoint}?client_id=${spotify_client_id}&redirect_uri=${spotify_redirect_uri}&response_type=${spotify_response_type}&scope=playlist-modify-private%20playlist-modify-public&response_type=token&show_dialogue=true`}>
+                  Login to Spotify
+              </Button>
+          </div>
+        }
+
+        {/* User inputs */}
         <div className="centered inputs">
-          {/* Text input */}
           {spotifyToken &&
             <div>
               <Form.Control 
@@ -255,36 +284,44 @@ function App() {
             </div>
           }
         </div>
-        
 
         <br/>
 
         {/* Search and Create playlist button row */}
-        {(spotifyToken && !isLoading) &&
+        {(spotifyToken && !isLoading && !spotifyIsCreating) &&
           <div>
             {/* Search button conditionally renders to enabled/disabled based on Spotify auth status */}
             <div className="flex-row flex-row-centered">
-              <Button variant="primary" size="lg" onClick={searchButtonHandler} className="big-button">Search</Button>
-              
-              {tracklist && 
-                <div>
-                  <Button variant="success" size="lg" onClick={createPlaylistHandler} className="big-button" id="create-playlist-button">Create Playlist</Button>
-                </div>
-              }
-            </div>
+                <Button variant="primary" size="lg" onClick={searchButtonHandler} className="big-button">Search</Button>
+                
+                {tracklist && 
+                  <div>
+                    <Button variant="success" size="lg" onClick={createPlaylistHandler} className="big-button" id="create-playlist-button">Create Playlist</Button>
+                  </div>
+                }
+              </div>
           </div>
         }
-        
-        {/* Spotify login button */}
-        {!spotifyToken && 
-          <div className="text-center">
-              <Button variant="success" 
-                size="lg"
-                href={`${auth_endpoint}?client_id=${spotify_client_id}&redirect_uri=${redirect_uri}&response_type=${response_type}&scope=playlist-modify-private%20playlist-modify-public&response_type=token&show_dialogue=true`}>
-                  Login to Spotify
-              </Button>
+  
+        {/* Discogs search loading spinner */}
+        { isLoading && <div>
+            <p className="text-centered color-white">Loading....</p>
+            <Spinner animation="border" variant="success" className="centered"/>
           </div>
         }
+
+        {/* Spotify Playlist Create status indicator */}
+        {(spotifyIsCreating) &&
+          <div>
+            <p className="text-centered color-white">Creating Spotify playlist....</p>
+            <Spinner animation="border" variant="success" className="centered"/>
+          </div>
+        }
+
+        <p>
+          {spotifyMessage.toString()}
+        </p>
+
         <br/>
 
         {/* Tracklist display */}
@@ -300,13 +337,6 @@ function App() {
                     </ListGroup.Item>
               })}
           </ListGroup>
-        }
-          
-        {/* Loading spinner */}
-        { isLoading && <div>
-            <p className="text-centered color-white">Loading....</p>
-            <Spinner animation="border" variant="success" className="centered"/>
-          </div>
         }
 
       </div>
