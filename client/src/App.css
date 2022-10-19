@@ -141,4 +141,8 @@
   background-color: #222;
   color: #A5C9CA;
   border: 0.01em solid gray;
+}
+
+#spotify-logout-button {
+  width: 100% !important;
 }/*# sourceMappingURL=App.css.map */

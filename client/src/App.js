@@ -1,15 +1,22 @@
+// Dependencies
 import React, { useEffect, useState, createContext } from 'react'
 import {Form, Button, ListGroup, Spinner, Row, Col} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import axios from 'axios'
+import useAsyncEffect from 'use-async-effect'
+
+// Components
+import Tracklist from './Tracklist'
+import LoadingSpinner from './LoadingSpinner';
+import InputForm from './InputForm';
 
 // Theme context for dark mode
 export const ThemeContext = createContext(null)
 
 function App() {
 
-  let devState = "dev" // "prod/dev"
+  let devState = "dev" // "prod" / "dev"
   let hosturl = ""
   let spotify_redirect_uri = ""
 
@@ -30,7 +37,7 @@ function App() {
   const [queryMax, setQueryMax] = useState(20);
   const [isLoading, setIsLoading] = useState(false);
   const [spotifyIsCreating, setSpotifyIsCreating] = useState(false)
-  const [spotifyMessage, setSpotifyMessage] = useState('')
+  const [spotifyUsername, setSpotifyUsername] = useState('')
   const [theme, setTheme] = useState("dark");
 
   // Auth State
@@ -43,12 +50,12 @@ function App() {
 
   // Get spotify keys from .env
   const spotify_client_id = process.env.REACT_APP_SPOTIFYCLIENTID
-  // Spotify auth
   
+  // Spotify auth
   const spotify_auth_endpoint = 'https://accounts.spotify.com/authorize';
   const spotify_response_type = 'token';
 
-  // UI Handlers ====================================================== //
+  // Handlers ====================================================== //
 
   // Sets input state on every keystroke
   function searchInputHandler(event) {
@@ -120,19 +127,7 @@ function App() {
       }
     })
     console.log(addTracksResponse)
-    setSpotifyMessage(addTracksResponse)
-  }
-
-  // Gets user ID for creating an empty playlist
-  async function getUserID(){
-    const userID = await axios("https://api.spotify.com/v1/me", {
-      headers:{
-        "Accept": "application/json", 
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + spotifyToken
-      }
-    })
-    return userID.data.id
+    setSpotifyUsername(addTracksResponse)
   }
 
   // [{Artist:"",Track:"",Release:""}] -> [spotifyURI]
@@ -179,7 +174,7 @@ function App() {
   }
 
   // Sets spotify auth token state from url (window.location)
-  function getSpotifyTokenFromWindow(){
+  async function getSpotifyTokenFromWindow(){
     const hash = window.location.hash
     let token = window.localStorage.getItem("token")
     if (!token && hash) {
@@ -190,13 +185,43 @@ function App() {
         window.location.hash = ""
         window.localStorage.setItem("token", token)
     }
+    // return token
     setSpotifyToken(token)
   }
 
+  // Gets user ID for creating an empty playlist
+  async function getUserID(id){
+    let userID = await axios("https://api.spotify.com/v1/me", {
+      headers:{
+        "Accept": "application/json", 
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + spotifyToken
+      }
+    })
+    // setSpotifyUserID(userID)
+    if (!id) {
+      return userID.data.id
+    } else if (id === 'full') {
+      return userID.data
+    }
+  }
+
   // "ComponentDidMount" - sets spotify token from window on initial render
-  useEffect(() => {
+  useAsyncEffect(async () => {
+
     getSpotifyTokenFromWindow()
-  }, [])
+    if (spotifyToken) {
+
+      // Promises
+      getUserID("full").then((id) => {
+        setSpotifyUsername(id.display_name)
+      })
+
+      // Async
+      let userName = await getUserID("full")
+      setSpotifyUsername(userName.display_name)
+    }
+  }, [spotifyToken])
   
   // JSX ================================================= //
 
@@ -223,10 +248,15 @@ function App() {
 
           {/* Spotify login status + logout button */}
           {spotifyToken && 
-            <div className="text-center spotify-login-container flex-row">
-                <h6 id="logged-in-text">Logged into Spotify 👌</h6>
-                <div className="spacer"/>
-                <Button variant="danger" size="sm" onClick={logout} className="spotify-logout-button">Logout</Button>
+            <div className="text-center spotify-login-container">
+                <div>
+                  <h6 id="logged-in-text">Logged into Spotify as</h6>
+                  {typeof spotifyUsername == 'string' &&
+                    <h6>{spotifyUsername}</h6>
+                  }
+                </div>
+                {/* <div className="spacer"/> */}
+                <Button variant="danger" size="sm" onClick={logout} id="spotify-logout-button">Log out</Button>
             </div>
           }
         </div>
@@ -255,33 +285,12 @@ function App() {
         {/* User inputs */}
         <div className="centered inputs">
           {spotifyToken &&
-            <div>
-              <Form.Control 
-                  size="lg" 
-                  type="text" 
-                  placeholder="Enter a Record Label (e.g. Motown)"
-                  onChange={searchInputHandler}
-                  value={labelSearchInput}
-                  className="text-input text-center" 
-                />
-              <br/>
-              <Row>
-                <Col className="col-3">
-                  <Form.Label>Max Results:</Form.Label>
-                </Col>
-                <Col className="col-9">
-                  <Form.Control 
-                    size="md" 
-                    type="number" 
-                    placeholder="Max Results"
-                    onChange={setQueryMaxHandler}
-                    value={queryMax}
-                    className="text-center"
-                    id="max-query-input"
-                  />
-                </Col>
-              </Row>
-            </div>
+           <InputForm 
+              searchInputHandler={searchInputHandler}
+              labelSearchInput={labelSearchInput}
+              setQueryMaxHandler={setQueryMaxHandler}
+              queryMax={queryMax} 
+            />
           }
         </div>
 
@@ -293,50 +302,26 @@ function App() {
             {/* Search button conditionally renders to enabled/disabled based on Spotify auth status */}
             <div className="flex-row flex-row-centered">
                 <Button variant="primary" size="lg" onClick={searchButtonHandler} className="big-button">Search</Button>
-                
-                {tracklist && 
-                  <div>
-                    <Button variant="success" size="lg" onClick={createPlaylistHandler} className="big-button" id="create-playlist-button">Create Playlist</Button>
-                  </div>
-                }
-              </div>
+                {tracklist && <Button variant="success" size="lg" onClick={createPlaylistHandler} className="big-button" id="create-playlist-button">Create Playlist</Button>}
+            </div>
           </div>
         }
   
         {/* Discogs search loading spinner */}
-        { isLoading && <div>
-            <p className="text-centered color-white">Loading....</p>
-            <Spinner animation="border" variant="success" className="centered"/>
-          </div>
+        { (isLoading) &&
+          <LoadingSpinner text='Loading...' color='blue'/>
         }
 
         {/* Spotify Playlist Create status indicator */}
-        {(spotifyIsCreating) &&
-          <div>
-            <p className="text-centered color-white">Creating Spotify playlist....</p>
-            <Spinner animation="border" variant="success" className="centered"/>
-          </div>
+        { (spotifyIsCreating) &&
+          <LoadingSpinner text='Creating Spotify Playlist...' color='green'/>
         }
-
-        <p>
-          {spotifyMessage.toString()}
-        </p>
 
         <br/>
 
         {/* Tracklist display */}
         { (tracklist && spotifyToken) && 
-          <ListGroup className="tracklist">
-              {tracklist.map((track) => {
-                  return <ListGroup.Item key={track} className="tracklist-item">
-                      <Form.Text muted>Artist: </Form.Text> {track.artist} 
-                      <br/>
-                      <Form.Text muted>Track: </Form.Text> {track.trackTitle}
-                      <br/>
-                      <Form.Text muted>Release: </Form.Text> {track.releaseTitle}
-                    </ListGroup.Item>
-              })}
-          </ListGroup>
+          <Tracklist tracklist={tracklist}/>
         }
 
       </div>
