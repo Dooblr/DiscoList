@@ -7,12 +7,16 @@ import axios from 'axios'
 import useAsyncEffect from 'use-async-effect'
 
 // Components
-import Tracklist from './Tracklist'
-import LoadingSpinner from './LoadingSpinner';
-import InputForm from './InputForm';
+import Tracklist from './Components/Tracklist'
+import LoadingSpinner from './Components/LoadingSpinner';
+import InputForm from './Components/InputForm/InputForm';
+import SpotifyLogoutBox from './Components/SpotifyLogoutBox/SpotifyLogoutBox';
 
 // Theme context for dark mode
 export const ThemeContext = createContext(null)
+export const SortTypeContext = createContext('release_date_descending')
+
+// TODO: More cleanup
 
 function App() {
 
@@ -34,10 +38,12 @@ function App() {
 
   // UI State
   const [labelSearchInput, setLabelSearchInput] = useState('');
-  const [queryMax, setQueryMax] = useState(20);
+  const [queryMax, setQueryMax] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
   const [spotifyIsCreating, setSpotifyIsCreating] = useState(false)
-  const [spotifyUsername, setSpotifyUsername] = useState('')
+
+  // Context state
+  const [sortType, setSortType] = useState('release_date_descending')
   const [theme, setTheme] = useState("dark");
 
   // Auth State
@@ -56,15 +62,6 @@ function App() {
   const spotify_response_type = 'token';
 
   // Handlers ====================================================== //
-
-  // Sets input state on every keystroke
-  function searchInputHandler(event) {
-    setLabelSearchInput(event.target.value);
-  };
-
-  function setQueryMaxHandler(event) {
-    setQueryMax(event.target.value)
-  }
 
   // Fetches a list of artists and titles and sets tracklist state to the response
   function searchButtonHandler() {
@@ -112,6 +109,8 @@ function App() {
     
     await addSpotifyTracksToPlaylist(playlistID, spotifyURIs)
 
+    console.log('finished creating playlist')
+
     setSpotifyIsCreating(false)
   }
 
@@ -127,7 +126,6 @@ function App() {
       }
     })
     console.log(addTracksResponse)
-    setSpotifyUsername(addTracksResponse)
   }
 
   // [{Artist:"",Track:"",Release:""}] -> [spotifyURI]
@@ -160,14 +158,6 @@ function App() {
     return spotifyURIs
   }
 
-  // Clear spotify token from window. TODO: Log out from spotify as well?
-  function logout() {
-    getSpotifyTokenFromWindow()
-    window.localStorage.removeItem("token")
-    alert('You have been logged out of Spotify')
-    window.location.reload()
-  }
-
   // Toggle HTML dark/light theme ID
   function toggleTheme(){
     setTheme((curr)=> (curr === "light" ? "dark" : "light") )
@@ -198,7 +188,6 @@ function App() {
         "Authorization": "Bearer " + spotifyToken
       }
     })
-    // setSpotifyUserID(userID)
     if (!id) {
       return userID.data.id
     } else if (id === 'full') {
@@ -210,17 +199,10 @@ function App() {
   useAsyncEffect(async () => {
 
     getSpotifyTokenFromWindow()
-    if (spotifyToken) {
-
-      // Promises
-      getUserID("full").then((id) => {
-        setSpotifyUsername(id.display_name)
-      })
-
-      // Async
-      let userName = await getUserID("full")
-      setSpotifyUsername(userName.display_name)
-    }
+    // if (spotifyToken) {
+    //   let userName = await getUserID("full")
+      // setSpotifyUsername(userName.display_name)
+    // }
   }, [spotifyToken])
   
   // JSX ================================================= //
@@ -248,16 +230,12 @@ function App() {
 
           {/* Spotify login status + logout button */}
           {spotifyToken && 
-            <div className="text-center spotify-login-container">
-                <div>
-                  <h6 id="logged-in-text">Logged into Spotify as</h6>
-                  {typeof spotifyUsername == 'string' &&
-                    <h6>{spotifyUsername}</h6>
-                  }
-                </div>
-                {/* <div className="spacer"/> */}
-                <Button variant="danger" size="sm" onClick={logout} id="spotify-logout-button">Log out</Button>
-            </div>
+            <SpotifyLogoutBox
+              // spotifyUsername={spotifyUsername}
+              spotifyToken={spotifyToken}
+              getUserID={getUserID}
+              getSpotifyTokenFromWindow={getSpotifyTokenFromWindow}
+            />
           }
         </div>
           
@@ -285,12 +263,14 @@ function App() {
         {/* User inputs */}
         <div className="centered inputs">
           {spotifyToken &&
-           <InputForm 
-              searchInputHandler={searchInputHandler}
-              labelSearchInput={labelSearchInput}
-              setQueryMaxHandler={setQueryMaxHandler}
-              queryMax={queryMax} 
-            />
+          <SortTypeContext.Provider value={{sortType, setSortType}}>
+            <InputForm 
+               labelSearchInput={labelSearchInput}
+               queryMax={queryMax} 
+               searchInputHandler={setLabelSearchInput}
+               setQueryMaxHandler={setQueryMax}
+             />
+          </SortTypeContext.Provider>
           }
         </div>
 
@@ -302,6 +282,7 @@ function App() {
             {/* Search button conditionally renders to enabled/disabled based on Spotify auth status */}
             <div className="flex-row flex-row-centered">
                 <Button variant="primary" size="lg" onClick={searchButtonHandler} className="big-button">Search</Button>
+
                 {tracklist && <Button variant="success" size="lg" onClick={createPlaylistHandler} className="big-button" id="create-playlist-button">Create Playlist</Button>}
             </div>
           </div>
@@ -320,8 +301,10 @@ function App() {
         <br/>
 
         {/* Tracklist display */}
-        { (tracklist && spotifyToken) && 
+        { (tracklist && spotifyToken) &&
+        <SortTypeContext.Provider value={sortType}>
           <Tracklist tracklist={tracklist}/>
+        </SortTypeContext.Provider>
         }
 
       </div>
