@@ -1,56 +1,66 @@
 // Dependencies
 import React, { useEffect, useState, createContext } from 'react'
-import {Form, Button, ListGroup, Spinner, Row, Col} from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
+import { Form, Button } from 'react-bootstrap'
 import axios from 'axios'
+import {Toaster, toast} from 'react-hot-toast'
 import useAsyncEffect from 'use-async-effect'
+
+import {toastDarkStyle} from './Utils'
+
+// CSS
+import 'bootstrap/dist/css/bootstrap.min.css'
+import './App.css'
 
 // Components
 import Tracklist from './Components/Tracklist'
-import LoadingSpinner from './Components/LoadingSpinner';
-import InputForm from './Components/InputForm/InputForm';
-import SpotifyLogoutBox from './Components/SpotifyLogoutBox/SpotifyLogoutBox';
+import LoadingSpinner from './Components/LoadingSpinner'
+import InputForm from './Components/InputForm/InputForm'
+import SpotifyLogoutBox from './Components/SpotifyLogoutBox/SpotifyLogoutBox'
 
 // Theme context for dark mode
 export const ThemeContext = createContext(null)
 export const SortTypeContext = createContext('release_date_descending')
 
 // TODO: More cleanup
+// Get on HTTPS
 
 function App() {
 
-  let devState = "dev" // "prod" / "dev"
+  let devState = "prod" // "prod" / "dev" / "mobile"
   let hosturl = ""
   let spotify_redirect_uri = ""
 
   if (devState === "prod") {
     // Express server address
-    hosturl = "http://54.176.233.72:8888"
-    spotify_redirect_uri = 'http://54.176.233.72:8888/';
+    hosturl = "https://disco-list.herokuapp.com/"
+    spotify_redirect_uri = 'https://disco-list.herokuapp.com/';
   } else if (devState === "dev") {
     // Express server address 
-    hosturl = "http://localhost:5000"
+    hosturl = "http://localhost:5000/"
     spotify_redirect_uri = 'http://localhost:3000';
+  } else if (devState === "mobile") {
+    // Local IP address
+    hosturl = "PUBLIC SERVER IP" 
+    spotify_redirect_uri = "PUBLIC CLIENT IP"
   }
 
   // State ============================================================ //
 
   // UI State
-  const [labelSearchInput, setLabelSearchInput] = useState('');
-  const [queryMax, setQueryMax] = useState(10);
-  const [isLoading, setIsLoading] = useState(false);
+  const [labelSearchInput, setLabelSearchInput] = useState('')
+  const [queryMax, setQueryMax] = useState(10)
+  const [isLoading, setIsLoading] = useState(false)
   const [spotifyIsCreating, setSpotifyIsCreating] = useState(false)
 
   // Context state
   const [sortType, setSortType] = useState('release_date_descending')
-  const [theme, setTheme] = useState("dark");
+  const [theme, setTheme] = useState("dark")
 
   // Auth State
-  const [spotifyToken, setSpotifyToken] = useState('');
+  const [spotifyToken, setSpotifyToken] = useState('')
 
   // Tracklist state
-  const [tracklist, setTracklist] = useState(null);
+  const [tracklist, setTracklist] = useState(null)
 
   // Spotify Auth ==================================================== //
 
@@ -58,8 +68,8 @@ function App() {
   const spotify_client_id = process.env.REACT_APP_SPOTIFYCLIENTID
   
   // Spotify auth
-  const spotify_auth_endpoint = 'https://accounts.spotify.com/authorize';
-  const spotify_response_type = 'token';
+  const spotify_auth_endpoint = 'https://accounts.spotify.com/authorize/'
+  const spotify_response_type = 'token'
 
   // Handlers ====================================================== //
 
@@ -69,19 +79,32 @@ function App() {
     // Clear track list
     setTracklist(null)
 
-    // Set loading status
+    // Set loading UI state
     setIsLoading(true)
 
-    fetch(hosturl + '/search?search=' + labelSearchInput + "&max=" + queryMax)
+    fetch(hosturl + 'search?search=' + labelSearchInput + "&max=" + queryMax)
       .then(res => res.json())
       .then(data => {
         setTracklist(data)
+        setIsLoading(false)
+      })
+      .catch(error => {
+        toast.error("No label found with that name",
+        {style: {
+            borderRadius: '10px',
+            background: '#333',
+            color: '#fff',
+          },
+        })
+        
+        // Return UI from loading state
         setIsLoading(false)
       });
   };
 
   async function createPlaylistHandler(){
     
+    // Set UI state to loading
     setSpotifyIsCreating(true)
 
     // Get user ID
@@ -105,18 +128,23 @@ function App() {
     const playlistID = createPlaylistResponse.data.id
 
     // Get a list of spotify URI's from the tracklist state
-    const spotifyURIs = await getSpotifyURIs(tracklist)
+    const spotifyURIs = await getSpotifyURIs(tracklist).catch(() => {
+      // Show error toast
+      toast.error("None of the listed tracks were found on Spotify 😢", toastDarkStyle)
+    })
     
+    // Run Spotify create playlist API
     await addSpotifyTracksToPlaylist(playlistID, spotifyURIs)
 
-    console.log('finished creating playlist')
+      // Confirm playlist create toast
+      toast.success("Successfully created Spotify Playlist 🎉", toastDarkStyle)
 
+    // Disable loading state
     setSpotifyIsCreating(false)
   }
 
   // takes a Spotify playlist ID and an array of spotify URIs -> adds them to a spotify playlist
   async function addSpotifyTracksToPlaylist(spotifyPlaylistID, spotifyUriArray){
-    console.log(spotifyUriArray.toString())
     const addTracksResponse = await axios.post(`https://api.spotify.com/v1/playlists/${spotifyPlaylistID}/tracks?uris=${spotifyUriArray.toString()}`, {},
     {
       headers: {
@@ -125,7 +153,6 @@ function App() {
         "Authorization": "Bearer " + spotifyToken
       }
     })
-    console.log(addTracksResponse)
   }
 
   // [{Artist:"",Track:"",Release:""}] -> [spotifyURI]
@@ -175,8 +202,7 @@ function App() {
         window.location.hash = ""
         window.localStorage.setItem("token", token)
     }
-    // return token
-    setSpotifyToken(token)
+    return token
   }
 
   // Gets user ID for creating an empty playlist
@@ -197,12 +223,8 @@ function App() {
 
   // "ComponentDidMount" - sets spotify token from window on initial render
   useAsyncEffect(async () => {
-
-    getSpotifyTokenFromWindow()
-    // if (spotifyToken) {
-    //   let userName = await getUserID("full")
-      // setSpotifyUsername(userName.display_name)
-    // }
+    const token = await getSpotifyTokenFromWindow()
+    setSpotifyToken(token)
   }, [spotifyToken])
   
   // JSX ================================================= //
@@ -211,6 +233,16 @@ function App() {
 
     // ThemeContext bridges React's theme state to HTML's ID which is then read by CSS
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      
+      {/* React Hot Toast shell */}
+      <div><Toaster
+        toastOptions={{
+          // Define default options
+          className: '',
+          duration: 5000
+        }}
+      /></div>
+
       <div className="app padding" id={theme}>
         <div className="flex-row">
           <div>
@@ -308,7 +340,11 @@ function App() {
         }
 
       </div>
+      
     </ThemeContext.Provider>
+
+
+    
   )
 }
 

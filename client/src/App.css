@@ -59,6 +59,7 @@
 #light {
   background-color: #A5C9CA;
 }
+
 #light .spotify-login-container {
   border: 1px solid #395B64;
 }
@@ -66,19 +67,24 @@
 #dark {
   background-color: #111;
 }
+
 #dark h1 {
   color: #A5C9CA;
 }
+
 #dark h2, #dark h3, #dark h4, #dark h5, #dark h6 {
   color: #A5C9CA;
 }
+
 #dark p {
   color: lightgray;
   text-align: center;
 }
+
 #dark .dark-mode-switch {
   color: gray;
 }
+
 #dark .form-label {
   color: #A5C9CA;
 }
@@ -137,12 +143,11 @@
   display: block;
   margin: auto;
 }
+
 .tracklist .tracklist-item {
   background-color: #222;
   color: #A5C9CA;
   border: 0.01em solid gray;
 }
 
-#spotify-logout-button {
-  width: 100% !important;
-}/*# sourceMappingURL=App.css.map */
+/*# sourceMappingURL=App.css.map *//*# sourceMappingURL=App.css.map */

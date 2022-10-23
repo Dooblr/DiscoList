@@ -3,7 +3,7 @@ var cors = require('cors');
 var cookieParser = require('cookie-parser');
 const axios = require('axios');
 
-// Number of releases to query from a list of discogs label releases. Defaults to 50.
+// Number of releases to query from a list of discogs label releases. Defaults to 25.
 let discogsQueryMax = 25
 
 // Enable Environment variables
@@ -29,9 +29,14 @@ app.get('/', (req, res) => {
 });
 
 // Start server
-app.listen(5000, () => {
+app.listen(process.env.PORT || 5000, () => {
     console.log("Server started on port 5000");
 });
+
+// SSL endpoint
+app.get('/.well-known/pki-validation/35263592DC4FFB28C8E94928FEC46310.txt', (req, res) => {
+    res.sendFile(__dirname + '/.well-known/pki-validation/35263592DC4FFB28C8E94928FEC46310.txt')
+})
 
 // App ================================================
 
@@ -117,7 +122,7 @@ async function getDiscogsLabelReleases(discogsLabelID) {
             }
 
             // Create a new track object
-            let newTrack = { artist: artistString, trackTitle: track.title, releaseTitle: discogsRelease.data.title }
+            let newTrack = { artist: artistString, trackTitle: track.title, releaseTitle: discogsRelease.data.title, year: discogsRelease.data.year }
 
             // Add object to global tracksArray
             tracksArray.splice(0, 0, newTrack)

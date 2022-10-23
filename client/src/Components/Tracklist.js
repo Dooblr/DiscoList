@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useContext } from 'react'
 import { ListGroup, Form } from 'react-bootstrap'
 import { SortTypeContext } from '../App'
 

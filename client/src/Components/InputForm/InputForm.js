@@ -6,6 +6,7 @@ import { SortTypeContext } from '../../App';
 function InputForm(props){
 
   const {sortType, setSortType} = useContext(SortTypeContext)
+
   const dropdownHandler = useCallback(event => {
     setSortType(event.target.value)
     console.log(sortType)
@@ -40,8 +41,10 @@ function InputForm(props){
             <Form.Label>Sort by:</Form.Label>
           </Col>
           <Col className="col-9">
-            <Form.Select className="form-select" 
-                        onChange={dropdownHandler}>
+            <Form.Select 
+                size="md" 
+                className="form-select" 
+                onChange={dropdownHandler}>
               <option value="release_date_descending">Release Date (newest first)</option>
               <option value="release_date_ascending">Release Date (oldest first)</option>
               <option value="artist">Artist</option>
@@ -62,7 +65,7 @@ function InputForm(props){
           <Col className="col-9">
             <Form.Control 
               size="md" 
-              type="number" 
+              type="number" pattern="\d*"
               placeholder="Max Results"
               onChange={setQueryMaxHandler}
               value={props.queryMax}
