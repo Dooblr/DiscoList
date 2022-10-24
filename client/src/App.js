@@ -1,10 +1,11 @@
 // Dependencies
-import React, { useEffect, useState, createContext } from 'react'
-import { Form, Button } from 'react-bootstrap'
-import axios from 'axios'
-import {Toaster, toast} from 'react-hot-toast'
+import React, { useState, createContext } from 'react'
 import useAsyncEffect from 'use-async-effect'
+import axios from 'axios'
 
+// UI
+import { Form, Button } from 'react-bootstrap'
+import {Toaster, toast} from 'react-hot-toast'
 import {toastDarkStyle} from './Utils'
 
 // CSS
@@ -20,9 +21,6 @@ import SpotifyLogoutBox from './Components/SpotifyLogoutBox/SpotifyLogoutBox'
 // Theme context for dark mode
 export const ThemeContext = createContext(null)
 export const SortTypeContext = createContext('release_date_descending')
-
-// TODO: More cleanup
-// Get on HTTPS
 
 function App() {
 
@@ -40,8 +38,8 @@ function App() {
     spotify_redirect_uri = 'http://localhost:3000';
   } else if (devState === "mobile") {
     // Local IP address
-    hosturl = "PUBLIC SERVER IP" 
-    spotify_redirect_uri = "PUBLIC CLIENT IP"
+    hosturl = "http://192.168.86.138:5000/"// "PUBLIC SERVER IP" 
+    spotify_redirect_uri = "http://192.168.86.138:3000"
   }
 
   // State ============================================================ //
@@ -145,7 +143,7 @@ function App() {
 
   // takes a Spotify playlist ID and an array of spotify URIs -> adds them to a spotify playlist
   async function addSpotifyTracksToPlaylist(spotifyPlaylistID, spotifyUriArray){
-    const addTracksResponse = await axios.post(`https://api.spotify.com/v1/playlists/${spotifyPlaylistID}/tracks?uris=${spotifyUriArray.toString()}`, {},
+    const addTracksResponse = await axios.post(`https://api.spotify.com/v1/playlists/${spotifyPlaylistID}/tracks?uris=${spotifyUriArray}`, {},
     {
       headers: {
         "Accept": "application/json",

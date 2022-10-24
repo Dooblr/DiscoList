@@ -1,15 +1,7 @@
-@font-face {
-  font-family: "SF Pro Display Light";
-  src: url("./Fonts/SF-Pro-Display-Light.otf");
+body {
+  font-family: "Arial";
 }
-@font-face {
-  font-family: "SF Pro Display Medium";
-  src: url("./Fonts/SF-Pro-Display-Medium.otf");
-}
-@font-face {
-  font-family: "SF Pro Display Heavy";
-  src: url("./Fonts/SF-Pro-Display-Heavy.otf");
-}
+
 .width-100 {
   width: 100%;
 }
@@ -94,7 +86,8 @@
 }
 
 .site-title {
-  font-family: "SF Pro Display Light";
+  font-family: "Arial";
+  font-weight: lighter;
 }
 
 .spotify-login-container {
@@ -105,12 +98,14 @@
 
 .title-text {
   text-align: center;
-  font-family: "SF Pro Display Heavy", light;
+  font-family: "Arial";
+  font-weight: bold;
 }
 
 .subtitle-text {
   text-align: center;
-  font-family: "SF Pro Display Light", light;
+  font-family: "Arial";
+  font-weight: lighter;
 }
 
 #search-parameters-container {

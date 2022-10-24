@@ -47,7 +47,10 @@ app.get('/search', async function (req, res) {
     discogsQueryMax = req.query.max
 
     // User Input -> Discogs Label ID
-    const labelID = await getDiscogsLabelID(req.query.search)
+    const labelID = await getDiscogsLabelID(req.query.search).catch((error) => {
+        return
+    })
+    if (labelID == "error") {return}
     
     // Discogs Label ID -> [{Artist:"",Title:"",Release:""}]
     const discogsReleases = await getDiscogsLabelReleases(labelID)
@@ -63,7 +66,7 @@ async function getDiscogsLabelID(searchInput) {
     const queryResults = await axios("https://api.discogs.com/database/search?q=" + searchInput + "&type=label" + "&token=" + discogsToken);
 
     // Return Labl ID of first result
-    return queryResults.data.results[0].id;
+    return queryResults.data.results[0].id || "error";
 };
 
 // Discogs Label ID -> [{Artist/Title}]

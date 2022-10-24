@@ -1,6 +1,5 @@
-import '../../App.css'
 import {Button} from 'react-bootstrap'
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import useAsyncEffect from 'use-async-effect'
 import {toastDarkStyle} from '../../Utils'
 import {toast} from 'react-hot-toast'
@@ -12,7 +11,7 @@ function SpotifyLogoutBox(props) {
   function logoutHandler(option) {
       props.getSpotifyTokenFromWindow()
       window.localStorage.removeItem("token")
-      if (option == 'token-expired') {
+      if (option === 'token-expired') {
         toast.alert('Please login to Spotify', {
           icon:'⚠️',
           style: {
@@ -31,6 +30,7 @@ function SpotifyLogoutBox(props) {
   }
 
   useAsyncEffect(async () => {
+      console.log(spotifyUsername)
       const userName = await props.getUserID("full").catch(error => {
         logoutHandler('token-expired')
       })

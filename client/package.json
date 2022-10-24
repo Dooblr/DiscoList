@@ -14,10 +14,12 @@
     "react-bootstrap": "^2.5.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.0",
+    "react-meta-tags": "^1.0.1",
     "react-scripts": "^5.0.1",
     "spotify-web-api-js": "^1.5.2",
     "use-async-effect": "^2.2.7",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "webfontloader": "^1.6.28"
   },
   "scripts": {
     "start": "react-scripts start",
