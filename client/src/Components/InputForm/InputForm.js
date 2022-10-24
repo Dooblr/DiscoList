@@ -23,7 +23,7 @@ function InputForm(props){
   }, [props.setQueryMax])
 
   return(
-      <div>
+      <div id="container">
         {/* Search text input */}
         <Form.Control 
             size="lg" 
@@ -38,7 +38,7 @@ function InputForm(props){
 
         <Row>
           <Col className="col-3">
-            <Form.Label>Sort by:</Form.Label>
+            <Form.Label className="form-label">Sort by:</Form.Label>
           </Col>
           <Col className="col-9">
             <Form.Select 

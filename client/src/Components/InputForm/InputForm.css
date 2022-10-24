@@ -1,4 +1,16 @@
 .form-select {
   text-align: center;
   height: 2.5em;
+}
+
+#container *::-moz-placeholder {
+  font-weight: bold;
+}
+
+#container *:-ms-input-placeholder {
+  font-weight: bold;
+}
+
+#container *::placeholder, #container * {
+  font-weight: bold;
 }/*# sourceMappingURL=InputForm.css.map */

@@ -1,18 +1,14 @@
-// @font-face {
-//   font-family: "SF Pro Display Light";
-//   src: url("./Fonts/SF-Pro-Display-Light.otf");
-// }
-// @font-face {
-//   font-family: "SF Pro Display Medium";
-//   src: url("./Fonts/SF-Pro-Display-Medium.otf");
-// }
-// @font-face {
-//   font-family: "SF Pro Display Heavy";
-//   src: url("./Fonts/SF-Pro-Display-Heavy.otf");
-// }
+$fallback-font: Verdana;
+$font-family:'Quicksand';
 
 body {
-  font-family: 'Arial';
+  // font-family: 'Arial';
+  font-family: $font-family, $fallback-font;
+  p {
+    font-weight:500;
+
+  }
+  overflow-x:hidden;
 }
 
 .width-100 {
@@ -93,8 +89,10 @@ body {
 }
 
 .site-title {
-  font-family: "Arial";
-  font-weight: lighter;
+  // font-family: "Arial";
+  // font-weight: lighter;
+  font-family: $font-family, $fallback-font;
+  font-weight: 100;
 }
 
 .spotify-login-container {
@@ -105,14 +103,18 @@ body {
 
 .title-text {
   text-align: center;
-  font-family: "Arial";
+  // font-family: "Arial";
+  // font-weight: bold;
+  font-family: $font-family, $fallback-font;
   font-weight: bold;
 }
 
 .subtitle-text {
   text-align: center;
-  font-family: "Arial";
-  font-weight: lighter;
+  // font-family: "Arial";
+  // font-weight: lighter;
+  font-family: $font-family, $fallback-font;
+  font-weight: medium;
 }
 
 #search-parameters-container {
@@ -138,6 +140,16 @@ body {
 
 #create-playlist-button {
   margin-left: 1em;
+}
+
+.bootstrap-button {
+  font-weight:bold;
+}
+
+.custom-button {
+  padding:2em;
+  background-color:blue;
+  width:10em;
 }
 
 .tracklist {

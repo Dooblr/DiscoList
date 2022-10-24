@@ -30,7 +30,6 @@ function SpotifyLogoutBox(props) {
   }
 
   useAsyncEffect(async () => {
-      console.log(spotifyUsername)
       const userName = await props.getUserID("full").catch(error => {
         logoutHandler('token-expired')
       })

@@ -1,5 +1,9 @@
 body {
-  font-family: "Arial";
+  font-family: "Quicksand", Verdana;
+  overflow-x: hidden;
+}
+body p {
+  font-weight: 500;
 }
 
 .width-100 {
@@ -86,8 +90,8 @@ body {
 }
 
 .site-title {
-  font-family: "Arial";
-  font-weight: lighter;
+  font-family: "Quicksand", Verdana;
+  font-weight: 100;
 }
 
 .spotify-login-container {
@@ -98,14 +102,14 @@ body {
 
 .title-text {
   text-align: center;
-  font-family: "Arial";
+  font-family: "Quicksand", Verdana;
   font-weight: bold;
 }
 
 .subtitle-text {
   text-align: center;
-  font-family: "Arial";
-  font-weight: lighter;
+  font-family: "Quicksand", Verdana;
+  font-weight: medium;
 }
 
 #search-parameters-container {
@@ -131,6 +135,16 @@ body {
 
 #create-playlist-button {
   margin-left: 1em;
+}
+
+.bootstrap-button {
+  font-weight: bold;
+}
+
+.custom-button {
+  padding: 2em;
+  background-color: blue;
+  width: 10em;
 }
 
 .tracklist {

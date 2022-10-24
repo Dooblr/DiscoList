@@ -2,6 +2,7 @@
 import React, { useState, createContext } from 'react'
 import useAsyncEffect from 'use-async-effect'
 import axios from 'axios'
+import WebFont from 'webfontloader';
 
 // UI
 import { Form, Button } from 'react-bootstrap'
@@ -35,11 +36,11 @@ function App() {
   } else if (devState === "dev") {
     // Express server address 
     hosturl = "http://localhost:5000/"
-    spotify_redirect_uri = 'http://localhost:3000';
+    spotify_redirect_uri = 'http://localhost:3000/';
   } else if (devState === "mobile") {
     // Local IP address
-    hosturl = "http://192.168.86.138:5000/"// "PUBLIC SERVER IP" 
-    spotify_redirect_uri = "http://192.168.86.138:3000"
+    hosturl = "PUBLIC TEST SERVER IP"// "LOCAL TEST SERVER IP" 
+    spotify_redirect_uri = "PUBLIC TEST CLIENT IP" // LOCAL TEST CLIENT IP
   }
 
   // State ============================================================ //
@@ -143,6 +144,7 @@ function App() {
 
   // takes a Spotify playlist ID and an array of spotify URIs -> adds them to a spotify playlist
   async function addSpotifyTracksToPlaylist(spotifyPlaylistID, spotifyUriArray){
+    // eslint-disable-next-line
     const addTracksResponse = await axios.post(`https://api.spotify.com/v1/playlists/${spotifyPlaylistID}/tracks?uris=${spotifyUriArray}`, {},
     {
       headers: {
@@ -160,6 +162,7 @@ function App() {
     let spotifyURIs = []
 
     // Run Spotify searches for each item in the track list and add them 
+    // eslint-disable-next-line
     for (const [index, release] of tracklist.entries()) {
       
       // remove commas from artist name so it does not 
@@ -174,7 +177,6 @@ function App() {
       })
 
       const items = spotifyData.data.tracks.items
-      console.log(items)
       if (items.length > 0) {
         let uri = items[0].uri
         if (uri) { spotifyURIs.push(uri) }
@@ -221,6 +223,13 @@ function App() {
 
   // "ComponentDidMount" - sets spotify token from window on initial render
   useAsyncEffect(async () => {
+    WebFont.load({
+      google: {
+        families:['Quicksand']
+        // families: ['SF-Pro-Display-Heavy','SF-Pro-Display-Medium','SF-Pro-Display-Light'],
+        // urls: ['font/Fonts.css'],
+      },
+    });
     const token = await getSpotifyTokenFromWindow()
     setSpotifyToken(token)
   }, [spotifyToken])
@@ -233,13 +242,7 @@ function App() {
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       
       {/* React Hot Toast shell */}
-      <div><Toaster
-        toastOptions={{
-          // Define default options
-          className: '',
-          duration: 5000
-        }}
-      /></div>
+      <div> <Toaster toastOptions={{className: '',duration: 5000}}/> </div>
 
       <div className="app padding" id={theme}>
         <div className="flex-row">
@@ -282,7 +285,7 @@ function App() {
           <div className="text-center">
               <h4>To begin, click to log into your Spotify account:</h4>
               <br/>
-              <Button variant="success" 
+              <Button variant="success" className="bootstrap-button"
                 size="lg"
                 href={`${spotify_auth_endpoint}?client_id=${spotify_client_id}&redirect_uri=${spotify_redirect_uri}&response_type=${spotify_response_type}&scope=playlist-modify-private%20playlist-modify-public&response_type=token&show_dialogue=true`}>
                   Login to Spotify
@@ -311,9 +314,9 @@ function App() {
           <div>
             {/* Search button conditionally renders to enabled/disabled based on Spotify auth status */}
             <div className="flex-row flex-row-centered">
-                <Button variant="primary" size="lg" onClick={searchButtonHandler} className="big-button">Search</Button>
+                <Button variant="primary" size="lg" onClick={searchButtonHandler} className="bootstrap-button"><text style={{"font-weight":"500 !important"}}>Search</text></Button>
 
-                {tracklist && <Button variant="success" size="lg" onClick={createPlaylistHandler} className="big-button" id="create-playlist-button">Create Playlist</Button>}
+                {tracklist && <Button variant="success" size="lg" onClick={createPlaylistHandler} className="bootstrap-button" id="create-playlist-button">Create Playlist</Button>}
             </div>
           </div>
         }

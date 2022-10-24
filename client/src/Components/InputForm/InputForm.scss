@@ -3,3 +3,10 @@
     height:2.5em;
 }
 
+#container {
+    *::placeholder, * {
+        // font-weight:700;
+        font-weight: bold;
+    }
+}
+
