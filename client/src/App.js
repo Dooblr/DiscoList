@@ -74,6 +74,11 @@ function App() {
 
   // Fetches a list of artists and titles and sets tracklist state to the response
   function searchButtonHandler() {
+
+    if (!labelSearchInput) {
+      toast.error('Please enter a record label before searching', toastDarkStyle)
+      return
+    }
     
     // Clear track list
     setTracklist(null)
@@ -88,13 +93,7 @@ function App() {
         setIsLoading(false)
       })
       .catch(error => {
-        toast.error("No label found with that name",
-        {style: {
-            borderRadius: '10px',
-            background: '#333',
-            color: '#fff',
-          },
-        })
+        toast.error("No labels found with that name", toastDarkStyle)
         
         // Return UI from loading state
         setIsLoading(false)
@@ -127,10 +126,12 @@ function App() {
     const playlistID = createPlaylistResponse.data.id
 
     // Get a list of spotify URI's from the tracklist state
-    const spotifyURIs = await getSpotifyURIs(tracklist).catch(() => {
-      // Show error toast
-      toast.error("None of the listed tracks were found on Spotify 😢", toastDarkStyle)
-    })
+    const spotifyURIs = await getSpotifyURIs(tracklist)
+
+    if (spotifyURIs.length < 1){
+      toast.error("None of the listed tracks were found on Spotify 😥")
+      return
+    }
     
     // Run Spotify create playlist API
     await addSpotifyTracksToPlaylist(playlistID, spotifyURIs)
@@ -226,10 +227,8 @@ function App() {
     WebFont.load({
       google: {
         families:['Quicksand']
-        // families: ['SF-Pro-Display-Heavy','SF-Pro-Display-Medium','SF-Pro-Display-Light'],
-        // urls: ['font/Fonts.css'],
       },
-    });
+    })
     const token = await getSpotifyTokenFromWindow()
     setSpotifyToken(token)
   }, [spotifyToken])
@@ -314,9 +313,21 @@ function App() {
           <div>
             {/* Search button conditionally renders to enabled/disabled based on Spotify auth status */}
             <div className="flex-row flex-row-centered">
-                <Button variant="primary" size="lg" onClick={searchButtonHandler} className="bootstrap-button"><text style={{"font-weight":"500 !important"}}>Search</text></Button>
+                <Button variant="primary" 
+                  size="lg" 
+                  onClick={searchButtonHandler} 
+                  className="bootstrap-button">
+                    Search
+                  </Button>
 
-                {tracklist && <Button variant="success" size="lg" onClick={createPlaylistHandler} className="bootstrap-button" id="create-playlist-button">Create Playlist</Button>}
+                {tracklist && 
+                  <Button variant="success" 
+                    size="lg" 
+                    onClick={createPlaylistHandler} 
+                    className="bootstrap-button" 
+                    id="create-playlist-button">
+                      Create Playlist
+                  </Button>}
             </div>
           </div>
         }

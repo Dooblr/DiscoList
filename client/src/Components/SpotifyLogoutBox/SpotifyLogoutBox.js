@@ -1,5 +1,5 @@
 import {Button} from 'react-bootstrap'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import useAsyncEffect from 'use-async-effect'
 import {toastDarkStyle} from '../../Utils'
 import {toast} from 'react-hot-toast'
@@ -12,7 +12,7 @@ function SpotifyLogoutBox(props) {
       props.getSpotifyTokenFromWindow()
       window.localStorage.removeItem("token")
       if (option === 'token-expired') {
-        toast.alert('Please login to Spotify', {
+        toast('Spotify token expired. Please log in again.', {
           icon:'⚠️',
           style: {
             borderRadius: '10px',
@@ -24,17 +24,27 @@ function SpotifyLogoutBox(props) {
         toast.success('Logging out of Spotify', toastDarkStyle)
       }
       setTimeout(() => {
-        console.log("Delayed for 5 seconds.");
         window.location.reload()
       }, 2000)
   }
 
+  useEffect(()=>{
+    /* Wait 2 seconds after load and if username has not been set yet 
+      this means that the token has expired; force logout and reload page.*/
+    // setTimeout(() => {
+    if (typeof spotifyUsername === undefined) {
+      logoutHandler('token-expired')
+    }
+    // }, 2000);
+  },[spotifyUsername])
+
   useAsyncEffect(async () => {
-      const userName = await props.getUserID("full").catch(error => {
-        logoutHandler('token-expired')
-      })
-      setSpotifyUsername(userName.display_name)
-    }, [props.spotifyToken])
+    const userName = await props.getUserID("full") // catching this was not working for checking token validity
+    // .catch(error => {
+    //   logoutHandler('token-expired')
+    // })
+    setSpotifyUsername(userName.display_name)
+  }, [props.spotifyToken])
 
   return(
       <div className="text-center spotify-login-container">

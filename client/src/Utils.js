@@ -4,4 +4,4 @@ export const toastDarkStyle = {
         background: '#333',
         color: '#fff',
     },
-  }
+}

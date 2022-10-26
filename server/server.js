@@ -93,9 +93,10 @@ async function getDiscogsLabelReleases(discogsLabelID) {
         // Get the release containing tracklist
         const discogsRelease = await axios("https://api.discogs.com/releases/" + releaseId, {headers: keySecretHeaders});
 
-        // Throttling
+        // Throttling (This must be here so ratelimit gets updated)
         if (discogsRelease.headers['x-discogs-ratelimit-remaining'] < '5') {
-            await new Promise(r => setTimeout(r, 1000));
+            console.log(discogsRelease.headers['x-discogs-ratelimit-remaining'])
+            await new Promise(r => setTimeout(r, 1100));
         }
 
         // Disregard entry if label is not included in release
