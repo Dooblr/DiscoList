@@ -33,23 +33,21 @@ app.listen(process.env.PORT || 5000, () => {
     console.log("Server started on port 5000");
 });
 
-// SSL endpoint
-app.get('/.well-known/pki-validation/35263592DC4FFB28C8E94928FEC46310.txt', (req, res) => {
-    res.sendFile(__dirname + '/.well-known/pki-validation/35263592DC4FFB28C8E94928FEC46310.txt')
-})
-
 // App ================================================
 
 // Client searches for record label, is returned array [{Artist:"",Title:"",Release:""}]
-app.get('/search', async function (req, res) {
-        
+app.get('/search', async function (req, res, error) {
+    
+    if (error) {
+        console.log(error)
+        // return
+    }
+
     // Set global max query length to param in response
     discogsQueryMax = req.query.max
 
     // User Input -> Discogs Label ID
-    const labelID = await getDiscogsLabelID(req.query.search).catch((error) => {
-        return
-    })
+    const labelID = await getDiscogsLabelID(req.query.search)
     if (labelID == "error") {return}
     
     // Discogs Label ID -> [{Artist:"",Title:"",Release:""}]
@@ -66,14 +64,14 @@ async function getDiscogsLabelID(searchInput) {
     const queryResults = await axios("https://api.discogs.com/database/search?q=" + searchInput + "&type=label" + "&token=" + discogsToken);
 
     // Return Labl ID of first result
-    return queryResults.data.results[0].id || "error";
+    return queryResults.data.results[0].id ? queryResults.data.results[0].id : "error";
 };
 
 // Discogs Label ID -> [{Artist/Title}]
 async function getDiscogsLabelReleases(discogsLabelID) {
 
     // 3. Get label releases from label ID
-    const discogsLabelReleasesResults = await axios("https://api.discogs.com/labels/" + discogsLabelID + "/releases", {headers: keySecretHeaders}); //  
+    const discogsLabelReleasesResults = await axios("https://api.discogs.com/labels/" + discogsLabelID + "/releases", {headers: keySecretHeaders});
 
     // 3a. Drill down into release data payload
     const discogsReleases = discogsLabelReleasesResults.data.releases;
@@ -91,7 +89,7 @@ async function getDiscogsLabelReleases(discogsLabelID) {
         const releaseId = release.id
         
         // Get the release containing tracklist
-        const discogsRelease = await axios("https://api.discogs.com/releases/" + releaseId, {headers: keySecretHeaders});
+        const discogsRelease = await axios("https://api.discogs.com/releases/" + releaseId, {headers: keySecretHeaders})
 
         // Throttling (This must be here so ratelimit gets updated)
         if (discogsRelease.headers['x-discogs-ratelimit-remaining'] < '5') {

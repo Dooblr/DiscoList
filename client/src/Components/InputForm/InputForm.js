@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import {Form, Row, Col} from 'react-bootstrap'
 import './InputForm.css'
 import { SortTypeContext } from '../../App';

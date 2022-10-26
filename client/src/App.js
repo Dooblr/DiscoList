@@ -1,5 +1,5 @@
 // Dependencies
-import React, { useState, createContext } from 'react'
+import React, { useState, useEffect, createContext } from 'react'
 import useAsyncEffect from 'use-async-effect'
 import axios from 'axios'
 import WebFont from 'webfontloader';
@@ -93,7 +93,8 @@ function App() {
         setIsLoading(false)
       })
       .catch(error => {
-        toast.error("No labels found with that name", toastDarkStyle)
+        console.log(error)
+        toast.error("No results found.", toastDarkStyle)
         
         // Return UI from loading state
         setIsLoading(false)
@@ -232,6 +233,13 @@ function App() {
     const token = await getSpotifyTokenFromWindow()
     setSpotifyToken(token)
   }, [spotifyToken])
+
+  // Alert user about timeouts if max results is set above 30
+  useEffect(()=>{
+    if (queryMax > 30) {
+      toast("Values above 30 may result in a timeout from the Discogs server.",toastDarkStyle)
+    }
+  },[queryMax])
   
   // JSX ================================================= //
 
