@@ -1,7 +1,7 @@
-import { useCallback, useContext, useEffect } from 'react';
-import {Form, Row, Col} from 'react-bootstrap'
-import './InputForm.css'
+import { useCallback, useContext } from 'react';
+import { Col, Form, Row } from 'react-bootstrap';
 import { SortTypeContext } from '../../App';
+import './InputForm.css';
 
 function InputForm(props){
 
@@ -23,7 +23,7 @@ function InputForm(props){
   }, [props.setQueryMax])
 
   return(
-      <div id="container">
+      <div id="input-container">
         {/* Search text input */}
         <Form.Control 
             size="lg" 
@@ -43,7 +43,7 @@ function InputForm(props){
           <Col className="col-9">
             <Form.Select 
                 size="md" 
-                className="form-select" 
+                className="form-select form-input" 
                 onChange={dropdownHandler}>
               <option value="release_date_descending">Release Date (newest first)</option>
               <option value="release_date_ascending">Release Date (oldest first)</option>
@@ -57,7 +57,7 @@ function InputForm(props){
         {/* Parameter inputs */}
         <Row>
           <Col className="col-3">
-            <Form.Label>
+            <Form.Label className='form-label'>
               Max Results:
             </Form.Label>
           </Col>
@@ -69,7 +69,7 @@ function InputForm(props){
               placeholder="Max Results"
               onChange={setQueryMaxHandler}
               value={props.queryMax}
-              className="text-center"
+              className="text-center form-input"
               id="max-query-input"
             />
           </Col>

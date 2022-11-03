@@ -1,5 +1,13 @@
+@font-face {
+  font-family: "SFProDisplay-Regular";
+  src: local("SFProDisplay-Regular");
+}
+.btn {
+  font-family: "SFProDisplay-Regular";
+}
+
 body {
-  font-family: "Quicksand", Verdana;
+  font-family: "SFProDisplay-Regular", Verdana;
   overflow-x: hidden;
 }
 body p {
@@ -56,7 +64,7 @@ body p {
   background-color: #A5C9CA;
 }
 
-#light .spotify-login-container {
+#light #spotify-login-container {
   border: 1px solid #395B64;
 }
 
@@ -90,35 +98,24 @@ body p {
 }
 
 .site-title {
-  font-family: "Quicksand", Verdana;
+  font-family: "SFProDisplay-Regular", Verdana;
   font-weight: 100;
-}
-
-.spotify-login-container {
-  border: 1px solid rgba(165, 201, 202, 0.5);
-  border-radius: 10px;
-  padding: 1em;
 }
 
 .title-text {
   text-align: center;
-  font-family: "Quicksand", Verdana;
-  font-weight: bold;
+  font-family: "SFProDisplay-Regular", Verdana;
+  font-weight: 900;
 }
 
 .subtitle-text {
   text-align: center;
-  font-family: "Quicksand", Verdana;
+  font-family: "SFProDisplay-Regular", Verdana;
   font-weight: medium;
 }
 
 #search-parameters-container {
   justify-content: center;
-}
-
-.spotify-login-container {
-  padding: 0.75em;
-  max-width: 50vw;
 }
 
 .text-white {
@@ -139,6 +136,8 @@ body p {
 
 .bootstrap-button {
   font-weight: bold;
+  border-radius: 25px;
+  min-width: 15rem;
 }
 
 .custom-button {
@@ -148,15 +147,24 @@ body p {
 }
 
 .tracklist {
-  max-width: 600px;
+  max-width: 400px !important;
   display: block;
   margin: auto;
+  font-family: "SFProDisplay-Regular";
 }
 
 .tracklist .tracklist-item {
   background-color: #222;
   color: #A5C9CA;
   border: 0.01em solid gray;
+}
+
+.loading-text {
+  font-family: "SFProDisplay-Regular";
+}
+
+.btn {
+  font-family: "SFProDisplay-Regular";
 }
 
 /*# sourceMappingURL=App.css.map *//*# sourceMappingURL=App.css.map */

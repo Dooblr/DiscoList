@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react'
 import useAsyncEffect from 'use-async-effect'
 import {toastDarkStyle} from '../../Utils'
 import {toast} from 'react-hot-toast'
+import '../../App.css'
+import './SpotifyLogoutBox.css'
 
 function SpotifyLogoutBox(props) {
 
@@ -47,12 +49,12 @@ function SpotifyLogoutBox(props) {
   }, [props.spotifyToken])
 
   return(
-      <div className="text-center spotify-login-container">
+      <div className="text-center" id="spotify-login-container">
           <div>
               <h6 id="logged-in-text">Logged into Spotify as</h6>
               <h6>{spotifyUsername || "no username"}</h6>
           </div>
-          <Button variant="danger" size="sm" onClick={logoutHandler} id="spotify-logout-button">Log out</Button>
+          <Button className="btn" variant="danger" size="sm" onClick={logoutHandler} id="spotify-logout-button">Log out</Button>
       </div>
   )
 }

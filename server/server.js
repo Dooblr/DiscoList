@@ -16,7 +16,7 @@ const consumerSecret = process.env.DISCOGSCONSUMERSECRET
 // Combine them for headers
 const keySecretHeaders = { 'Authorization': 'Discogs', "key" : consumerKey, "secret" : consumerSecret }
 
-// SERVER
+// Server =======================================================//
 const app = express()
 
 app.use(express.static(__dirname + '/build'))

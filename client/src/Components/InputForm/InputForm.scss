@@ -1,12 +1,33 @@
+@import '../../App.scss';
+
 .form-select {
     text-align:center;
     height:2.5em;
 }
 
-#container {
+#input-container {
     *::placeholder, * {
-        // font-weight:700;
+        font-family: $font-family2;
         font-weight: bold;
+        font-size:medium;
     }
+    *{
+        border-radius:$border-radius;
+        font-family: $font-family2;
+    }
+}
+
+.form-label{
+    transform: translate(0.5rem,0.3rem);
+    font-family: $font-family2;
+}
+
+.text-input{
+    max-width:25rem;
+    margin:auto;
+}
+
+.form-input{
+    max-width:20rem;
 }
 

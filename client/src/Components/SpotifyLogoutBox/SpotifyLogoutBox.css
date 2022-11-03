@@ -1,1 +1,184 @@
-/*# sourceMappingURL=SpotifyLogoutBox.css.map */
+@font-face {
+  font-family: "SFProDisplay-Regular";
+  src: local("SFProDisplay-Regular");
+}
+.btn {
+  font-family: "SFProDisplay-Regular";
+}
+
+body {
+  font-family: "Quicksand", Verdana;
+  overflow-x: hidden;
+}
+body p {
+  font-weight: 500;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.padding {
+  padding: 1em;
+}
+
+.centered {
+  display: block;
+  margin: auto;
+  align-items: center;
+  text-align: center;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.flex-row-centered {
+  justify-content: center;
+}
+
+.flex-center-align {
+  margin: auto;
+}
+
+.indent {
+  margin-left: 1em;
+}
+
+.spacer {
+  width: 1em;
+}
+
+.spacer-fill {
+  flex-grow: 1;
+}
+
+#light {
+  background-color: #A5C9CA;
+}
+
+#light #spotify-login-container {
+  border: 1px solid #395B64;
+}
+
+#dark {
+  background-color: #111;
+}
+
+#dark h1 {
+  color: #A5C9CA;
+}
+
+#dark h2, #dark h3, #dark h4, #dark h5, #dark h6 {
+  color: #A5C9CA;
+}
+
+#dark p {
+  color: lightgray;
+  text-align: center;
+}
+
+#dark .dark-mode-switch {
+  color: gray;
+}
+
+#dark .form-label {
+  color: #A5C9CA;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+.site-title {
+  font-family: "Quicksand", Verdana;
+  font-weight: 100;
+}
+
+.title-text {
+  text-align: center;
+  font-family: "Quicksand", Verdana;
+  font-weight: 900;
+}
+
+.subtitle-text {
+  text-align: center;
+  font-family: "Quicksand", Verdana;
+  font-weight: medium;
+}
+
+#search-parameters-container {
+  justify-content: center;
+}
+
+.text-white {
+  color: whitesmoke;
+}
+
+.inputs {
+  max-width: 500px;
+}
+
+#logged-in-text {
+  margin: auto;
+}
+
+#create-playlist-button {
+  margin-left: 1em;
+}
+
+.bootstrap-button {
+  font-weight: bold;
+  border-radius: 25px;
+  min-width: 15rem;
+}
+
+.custom-button {
+  padding: 2em;
+  background-color: blue;
+  width: 10em;
+}
+
+.tracklist {
+  max-width: 600px;
+  display: block;
+  margin: auto;
+}
+
+.tracklist .tracklist-item {
+  background-color: #222;
+  color: #A5C9CA;
+  border: 0.01em solid gray;
+}
+
+.loading-text {
+  font-family: "SFProDisplay-Regular";
+}
+
+.btn {
+  font-family: "SFProDisplay-Regular";
+}
+
+/*# sourceMappingURL=App.css.map */
+#spotify-login-container {
+  font-family: "SFProDisplay-Regular";
+  border: 1px solid rgba(165, 201, 202, 0.5);
+  border-radius: 15px;
+  padding: 0.75rem;
+  max-width: 50vw;
+}
+#spotify-login-container * {
+  font-family: "SFProDisplay-Regular";
+}
+
+#spotify-logout-button {
+  width: 100%;
+  border-radius: 25px;
+}/*# sourceMappingURL=SpotifyLogoutBox.css.map */

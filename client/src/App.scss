@@ -1,5 +1,16 @@
 $fallback-font: Verdana;
-$font-family:'Quicksand';
+$font-family:'SFProDisplay-Regular';
+$font-family2:'SFProDisplay-Regular';
+$border-radius:25px;
+
+@font-face {
+  font-family: 'SFProDisplay-Regular';
+  src: local('SFProDisplay-Regular');
+}
+
+.btn{
+  font-family: $font-family2;
+}
 
 body {
   // font-family: 'Arial';
@@ -60,7 +71,7 @@ body {
 #light {
   background-color: #A5C9CA;
 }
-#light .spotify-login-container {
+#light #spotify-login-container {
   border: 1px solid #395B64;
 }
 
@@ -89,41 +100,24 @@ body {
 }
 
 .site-title {
-  // font-family: "Arial";
-  // font-weight: lighter;
   font-family: $font-family, $fallback-font;
   font-weight: 100;
 }
 
-.spotify-login-container {
-  border: 1px solid rgba(165, 201, 202, 0.5);
-  border-radius: 10px;
-  padding: 1em;
-}
-
 .title-text {
   text-align: center;
-  // font-family: "Arial";
-  // font-weight: bold;
   font-family: $font-family, $fallback-font;
-  font-weight: bold;
+  font-weight: 900;
 }
 
 .subtitle-text {
   text-align: center;
-  // font-family: "Arial";
-  // font-weight: lighter;
   font-family: $font-family, $fallback-font;
   font-weight: medium;
 }
 
 #search-parameters-container {
   justify-content: center;
-}
-
-.spotify-login-container {
-  padding: 0.75em;
-  max-width: 50vw;
 }
 
 .text-white {
@@ -144,6 +138,8 @@ body {
 
 .bootstrap-button {
   font-weight:bold;
+  border-radius: $border-radius;
+  min-width:15rem;
 }
 
 .custom-button {
@@ -153,13 +149,22 @@ body {
 }
 
 .tracklist {
-  max-width: 600px;
+  max-width: 400px !important;
   display: block;
   margin: auto;
+  font-family:'SFProDisplay-Regular'
 }
 .tracklist .tracklist-item {
   background-color: #222;
   color: #A5C9CA;
   border: 0.01em solid gray;
+}
+
+.loading-text{
+  font-family: $font-family2;
+}
+
+.btn{
+  font-family:$font-family2;
 }
 /*# sourceMappingURL=App.css.map */

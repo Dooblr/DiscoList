@@ -25,7 +25,7 @@ export const SortTypeContext = createContext('release_date_descending')
 
 function App() {
 
-  let devState = "prod" // "prod" / "dev" / "mobile"
+  const devState = "prod" // "prod" / "dev" / "mobile"
   let hosturl = ""
   let spotify_redirect_uri = ""
 
@@ -227,7 +227,7 @@ function App() {
   useAsyncEffect(async () => {
     WebFont.load({
       google: {
-        families:['Quicksand']
+        families:['Quicksand'] //'Open Sans'
       },
     })
     const token = await getSpotifyTokenFromWindow()
@@ -342,12 +342,12 @@ function App() {
   
         {/* Discogs search loading spinner */}
         { (isLoading) &&
-          <LoadingSpinner text='Loading...' color='blue'/>
+          <LoadingSpinner className="loading-text" text='Loading...' color='blue'/>
         }
 
         {/* Spotify Playlist Create status indicator */}
         { (spotifyIsCreating) &&
-          <LoadingSpinner text='Creating Spotify Playlist...' color='green'/>
+          <LoadingSpinner className="loading-text" text='Creating Spotify Playlist...' color='green'/>
         }
 
         <br/>
