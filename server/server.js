@@ -29,8 +29,8 @@ app.get('/', (req, res) => {
 });
 
 // Start server
-app.listen(process.env.PORT || 5000, () => {
-    console.log("Server started on port 5000");
+app.listen(process.env.PORT || 8080, () => {
+    console.log("Server started on port 8080");
 });
 
 // App ================================================

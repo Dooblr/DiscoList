@@ -31,8 +31,8 @@ function App() {
 
   if (devState === "prod") {
     // Express server address
-    hosturl = "https://disco-list.herokuapp.com/"
-    spotify_redirect_uri = 'https://disco-list.herokuapp.com/';
+    hosturl = "https://disco-list.com/"
+    spotify_redirect_uri = 'https://disco-list.com/';
   } else if (devState === "dev") {
     // Express server address 
     hosturl = "http://localhost:5000/"
